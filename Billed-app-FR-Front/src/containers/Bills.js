@@ -1,5 +1,5 @@
 import { ROUTES_PATH } from '../constants/routes.js'
-import { formatDate, formatStatus } from "../app/format.js"
+import { formatDate, formatStatus, antiChrono } from "../app/format.js"
 import Logout from "./Logout.js"
 
 export default class {
@@ -29,15 +29,11 @@ export default class {
 
   getBills = () => {
     if (this.store) {
-      // console.log('length', bills.length)
-      // bills.sort(function (a, b) {
-      //   return new Date(b.date) - new Date(a.date);
-      // })
-      // console.log('datesSorted ', datesSorted)
       return this.store
         .bills()
         .list()
         .then(snapshot => {
+          snapshot.sort(antiChrono)
           const bills = snapshot
             .map(doc => {
               try {
@@ -58,9 +54,12 @@ export default class {
               }
             })
           // console.log('length', bills.length)
-          const datesSorted = bills.sort(function (a, b) {
-            return new Date(b.date) - new Date(a.date);
-          })
+          // const datesSorted = bills.sort(function (a, b) {
+          //   return new Date(b.date) - new Date(a.date);
+          // })
+          // bills.sort(function (a, b) {
+          //   return new Date(b.date) - new Date(a.date);
+          // })
           // console.log('datesSorted ', datesSorted)
           return bills
         })
