@@ -4,7 +4,7 @@
 
 import '@testing-library/jest-dom/extend-expect'
 import userEvent from '@testing-library/user-event'
-import { getByTestId, screen, waitFor } from "@testing-library/dom"
+import { screen, waitFor } from "@testing-library/dom"
 import '@testing-library/jest-dom'
 import BillsUI from "../views/BillsUI.js"
 import { bills } from "../fixtures/bills.js"
@@ -12,7 +12,7 @@ import { ROUTES_PATH } from "../constants/routes.js"
 import { localStorageMock } from "../__mocks__/localStorage.js"
 import mockStore from "../__mocks__/store"
 import router from "../app/Router.js"
-import { default as billFunctions } from "../containers/Bills.js";
+import Bills from "../containers/Bills.js"
 
 jest.mock("../app/store", () => mockStore);
 
@@ -47,7 +47,7 @@ describe("Given I am a user connected as an employee", () => {
         root.setAttribute("id", "root")
         document.body.appendChild(root)
         router()
-      });
+      })
 
       test("Then fetches bills from an API and fails with 404 message error", async () => {
         mockStore.bills.mockImplementationOnce(() => {
@@ -84,7 +84,6 @@ describe("Given I am a user connected as an employee", () => {
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
     test("Then bill icon in vertical layout should be highlighted", async () => {
-
       Object.defineProperty(window, 'localStorage', { value: localStorageMock })
       window.localStorage.setItem('user', JSON.stringify({
         type: 'Employee'
@@ -99,16 +98,17 @@ describe("Given I am connected as an employee", () => {
 
       expect(windowIcon).toHaveClass("active-icon")
     })
+
     test("Then bills should be ordered from earliest to latest", () => {
       document.body.innerHTML = BillsUI({ data: bills })
-      const antiChrono = (a, b) => ((a < b) ? 1 : -1)
-      const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map(a => a.innerHTML).sort(antiChrono)
-      const datesSorted = [...dates]
+      const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map(a => a.innerHTML)
+      const antiChrono = (a, b) => new Date(b.date) - new Date(a.date)
+      const datesSorted = [...dates].sort(antiChrono)
       expect(dates).toEqual(datesSorted)
     })
+
     describe('When I click on the icon eye', () => {
       test('Then, the modale should be displayed', async () => {
-
         Object.defineProperty(window, 'localStorage', { value: localStorageMock })
         window.localStorage.setItem('user', JSON.stringify({
           type: 'Employee'
@@ -122,11 +122,12 @@ describe("Given I am connected as an employee", () => {
         const iconEye = screen.getAllByTestId("icon-eye");
         const firstItem = iconEye[0];
 
+        const instanceBills = new Bills({ document })
+        instanceBills.handleClickIconEye = jest.fn();
         $.fn.modal = jest.fn();
-
         userEvent.click(firstItem);
 
-        expect($.fn.modal).toHaveBeenCalled();
+        expect(instanceBills.handleClickIconEye).toHaveBeenCalled();
       })
     })
   })

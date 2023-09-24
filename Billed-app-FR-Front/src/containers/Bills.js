@@ -53,14 +53,6 @@ export default class {
                 }
               }
             })
-          // console.log('length', bills.length)
-          // const datesSorted = bills.sort(function (a, b) {
-          //   return new Date(b.date) - new Date(a.date);
-          // })
-          // bills.sort(function (a, b) {
-          //   return new Date(b.date) - new Date(a.date);
-          // })
-          // console.log('datesSorted ', datesSorted)
           return bills
         })
     }

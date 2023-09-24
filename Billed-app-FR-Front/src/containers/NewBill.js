@@ -37,7 +37,6 @@ export default class NewBill {
           }
         })
         .then(({ fileUrl, key }) => {
-          console.log(fileUrl)
           this.billId = key
           this.fileUrl = fileUrl
           this.fileName = fileName
@@ -47,7 +46,6 @@ export default class NewBill {
   handleSubmit = e => {
     if (formatValid) {
       e.preventDefault()
-      console.log('e.target.querySelector(`input[data-testid="datepicker"]`).value', e.target.querySelector(`input[data-testid="datepicker"]`).value)
       const email = JSON.parse(localStorage.getItem("user")).email
       const bill = {
         email,
@@ -81,8 +79,8 @@ export default class NewBill {
   }
 }
 /**
- * On renvoie true si le format est valide, false sinon
+ * Return true if format is valid
  */
-function VerifyImageFormat(input) {
+export function VerifyImageFormat(input) {
   return /image\/(jpeg|jpg|png)/.test(input);
 }

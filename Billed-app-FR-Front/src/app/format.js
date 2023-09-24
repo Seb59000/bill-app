@@ -18,4 +18,4 @@ export const formatStatus = (status) => {
   }
 }
 
-export const antiChrono = (a, b) => ((a.date < b.date) ? 1 : -1);
+export const antiChrono = (a, b) => new Date(b.date) - new Date(a.date)
