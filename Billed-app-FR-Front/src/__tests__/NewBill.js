@@ -4,7 +4,7 @@
 
 import NewBillUI from "../views/NewBillUI.js"
 import '@testing-library/jest-dom/extend-expect'
-import NewBill, { VerifyImageFormat } from "../containers/NewBill.js"
+import NewBill from "../containers/NewBill.js"
 import { fireEvent } from '@testing-library/dom'
 import mockStore from "../__mocks__/store";
 import { localStorageMock } from "../__mocks__/localStorage.js"
@@ -116,12 +116,6 @@ describe('handleChangeFile Unit Test', () => {
         files: [new File(['test file content'], 'test.jpg', { type: 'image/jpeg' })]
       }
     });
-    const e = {
-      target: {
-        value: 'C:\\fakepath\\test.jpg'
-      },
-      preventDefault: jest.fn()
-    }; // create a mock event object with a preventDefault function and a target value(to prevent e.target = undefined). To prevent the test to fail
     const fileUrl = await newBillInstance.store.bills().create();
     expect(fileUrl).toBeDefined();
   })
